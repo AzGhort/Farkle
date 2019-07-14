@@ -6,7 +6,9 @@ namespace Farkle
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            var state = new GameState();
+            var combs = state.GetAllDiceCombinations();
+            int a = 2;
         }
     }
 }
