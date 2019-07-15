@@ -7,60 +7,26 @@ namespace Farkle
 {
     class GameLogic
     {
-        /// <summary>
-        /// Treats dies only one-by-one, counts ones-and-fives score.
-        /// </summary>
-        /// <param name="dies"> Dies to compute score.</param>
-        /// <returns>Score of given dies.</returns>
-        public static int GetOnesAndFivesScore(List<Dice> dies)
+        public static RollResult Reroll(GameState state)
         {
-            int ones = dies.FindAll(die => die.Value == 1).Count;
-            int fives = dies.FindAll(die => die.Value == 5).Count;
-            // only keepable combinations, no other dies allowed
-            if (ones + fives != dies.Count) return 0;
-            return ones * 100 + fives * 50;
-        }
-
-        public static int GetSameDiesScore(List<Dice> dies)
-        {
-            // only combinations of same dies
-            if (dies.Any(die => die.Value != dies[0].Value)) return 0;
-            var factor = dies.Count - 2;
-            switch (dies[0].Value)
-            {
-                case 1:
-                    return 1000 * factor;
-                case 2:
-                    return 200 * factor;
-                case 3:
-                    return 300 * factor;
-                case 4:
-                    return 400 * factor;
-                case 5:
-                    return 500 * factor;
-                case 6:
-                    return 600 * factor;
-                default:
-                    return 0;
-            }
-        }
-
-        public static int DetermineScore(List<Dice> dies)
-        {
-            if (dies.Count < 3) return GetOnesAndFivesScore(dies);
-            var same = GetSameDiesScore(dies);
-            return same > 0 ? same : GetOnesAndFivesScore(dies);
-        }
-
-        public static void Reroll(GameState state)
-        {
+            state.Attempt++;
+            var dicesToRoll = new List<Dice>();
             foreach (var dice in state.Dies)
             {
                 if (!dice.Kept)
                 {
                     dice.Roll();
+                    dicesToRoll.Add(dice);
                 }
             }
+
+            var diceSet = Scoring.DetermineScore(dicesToRoll);
+            if ((diceSet.Score == 0) || (diceSet.Score + state.Score < 350 && state.Attempt == 3))
+            {
+                return RollResult.FAILURE;
+            }
+
+            return RollResult.SUCCESS;
         }
     }
 

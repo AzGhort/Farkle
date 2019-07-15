@@ -4,29 +4,6 @@ using System.Text;
 
 namespace Farkle
 {
-    class DiceCombination
-    {
-        public List<Dice> Dices = new List<Dice>();
-        public int Score = 0;
-
-        public DiceCombination(List<Dice> dies)
-        {
-            Dices = dies;
-            Score = GameLogic.DetermineScore(Dices);
-        }
-
-        public override string ToString()
-        {
-            string ret = "";
-            foreach (var dice in Dices)
-            {
-                ret += dice.Value;
-            }
-
-            return ret;
-        }
-    }
-
     class Dice
     {
         private static Random random = new Random();

@@ -11,13 +11,11 @@ namespace Farkle
     class GameState
     {
         public Dice[] Dies = new Dice[6];
+        
+        public int Score = 0;
 
-        public List<DiceCombination> KeptDiceCombinations = new List<DiceCombination>();
-
-        public int Score => KeptDiceCombinations.Sum(combination => combination.Score);
-
-        public int Attempt = 1;
-        public bool Keepable => Score >= 350;
+        public int Attempt = 0;
+        public bool Scorable => Score >= 350;
 
         public GameState()
         {
@@ -25,25 +23,6 @@ namespace Farkle
             {
                 Dies[i] = new Dice();
             }
-        }
-
-        public List<DiceCombination> GetAllDiceCombinations()
-        {
-            var diceCombinations = new List<DiceCombination>();
-            for (int i = 0; i < 64; i++)
-            {
-                var combination = new List<Dice>();
-                for (int j = 0; j < 6; j++)
-                {
-                    if ((i & (1 << (6 - j - 1))) != 0)
-                    {
-                        combination.Add(Dies[j]);
-                    }
-                }
-                diceCombinations.Add(new DiceCombination(combination));
-            }
-
-            return diceCombinations;
         }
     }
 }
