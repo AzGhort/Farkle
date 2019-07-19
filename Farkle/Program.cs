@@ -6,7 +6,8 @@ namespace Farkle
     {
         static void Main(string[] args)
         {
-            
+            GameExecutor gameExecutor = new GameExecutor();
+            gameExecutor.RunGame();
         }
     }
 }

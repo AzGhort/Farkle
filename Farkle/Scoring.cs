@@ -4,6 +4,9 @@ using System.Text;
 
 namespace Farkle
 {
+    /// <summary>
+    /// Represents set of rolled dices.
+    /// </summary>
     class DiceSet
     {
         public bool Keepable = true;
@@ -11,8 +14,16 @@ namespace Farkle
         public int Score = 0;
     }
 
+    /// <summary>
+    /// Provides methods to compute score of given dices.
+    /// </summary>
     class Scoring
     {
+        /// <summary>
+        /// Determines score of given dices.
+        /// </summary>
+        /// <param name="dices">Dices to be scored.</param>
+        /// <returns>Dices and their score.</returns>
         public static DiceSet DetermineScore(List<Dice> dices)
         {
             DiceSet retval = new DiceSet();
@@ -32,6 +43,11 @@ namespace Farkle
             return retval;
         }
 
+        /// <summary>
+        /// Splits dices by value to dictionary.
+        /// </summary>
+        /// <param name="dices">Dices to be split.</param>
+        /// <returns>Mapping from values to counts of the dices.</returns>
         private static Dictionary<int, int> SplitDicesByValue(IEnumerable<Dice> dices)
         {
             var ret = new Dictionary<int, int>();
@@ -44,6 +60,12 @@ namespace Farkle
             return ret;
         }
 
+        /// <summary>
+        /// Computes score of dices with the same value.
+        /// </summary>
+        /// <param name="diceValue">Value of the dices.</param>
+        /// <param name="diceCount">Count of the dices.</param>
+        /// <returns>Score of given dice set.</returns>
         private static int ComputeSameDicesScore(int diceValue, int diceCount)
         {
             if (diceCount < 3)
@@ -79,10 +101,5 @@ namespace Farkle
             }
 
         }
-    }
-
-    enum RollResult
-    {
-        FAILURE, SUCCESS
-    }
+    }    
 }
