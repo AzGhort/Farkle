@@ -7,4 +7,4 @@ The goal of the game is to score 10 000 points. At each turn, a player rolls all
 The scoring of the dices is as follows:
 * single 1 - 100 points  
 * single 5 - 50 points
-* 3 or more dices with the same value - (number of dices - 2) * (1000/200/300/400/500/600 for dice values 1/2/3/4/5/6 respectively)
+* three or more dices with the same value - (number of dices - 2) * (1000/200/300/400/500/600 for dice values 1/2/3/4/5/6 respectively)
