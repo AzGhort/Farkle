@@ -31,6 +31,10 @@ namespace Farkle
         public const string ScoreOrder = "SCORE";
         // messages from the game
         public const string EndGameInfo = "GAME OVER";
+        public const string StartGameInfo = "START";
+        public const string OtherPlayerTurnInfo = "OTHER PLAYER SCORE";
+        public const string StartTurnInfo = "PLAY";
+        public const string EndTurnInfo = "TURN OVER";
         public const string SuccessInfo = "SUCCESS";
         public const string FailureInfo = "FAILURE";
         public const string BadOrderInfo = "INVALID ACTION";

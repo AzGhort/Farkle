@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Linq;
+using System.IO;
+using System.Diagnostics;
 
 namespace Farkle
 {
@@ -13,14 +15,18 @@ namespace Farkle
         public int TurnOrder;
         public TurnState State = new TurnState();
         public int TotalScore = 0;
+        public StreamReader PlayerOutput;
+        public StreamWriter PlayerInput;
 
         /// <summary>
         /// Creates a new player.
         /// </summary>
         /// <param name="turnOrder">Order of the turn, in which the player plays.</param>
-        public Player(int turnOrder)
+        public Player(int turnOrder, StreamReader o, StreamWriter i)
         {
             TurnOrder = turnOrder;
+            PlayerInput = i;
+            PlayerOutput = o;
         }
 
         /// <inheritoc/>
@@ -50,13 +56,12 @@ namespace Farkle
         public bool IsWon => (TurnOrder == Players.Length - 1 &&
             Players.Any(player => player.TotalScore >= 10000));
         public Player CurrentPlayer => Players[TurnOrder];
+        public Player OtherPlayer => Players[(TurnOrder + 1) % 2];
 
-        public Game()
+        public Game(StreamReader out1, StreamWriter in1, StreamReader out2, StreamWriter in2)
         {
-            for (int i = 0; i < 2; i++)
-            {
-                Players[i] = new Player(i);
-            }
+            Players[0] = new Player(0, out1, in1);
+            Players[1] = new Player(1, out2, in2);
         }
 
         public Player Winner
