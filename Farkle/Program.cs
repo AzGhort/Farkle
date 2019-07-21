@@ -15,7 +15,5 @@ namespace Farkle
             GameExecutor gameExecutor = new GameExecutor(args[0], args[1]);
             gameExecutor.RunGame();
         }
-
-
     }
 }

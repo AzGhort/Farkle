@@ -1,21 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Farkle
 {
     /// <summary>
-    /// Dice representation.
+    ///     Dice representation.
     /// </summary>
-    class Dice
+    internal class Dice
     {
-        private static Random random = new Random();
+        private static readonly Random random = new Random();
 
         public int Value { get; set; } = random.Next(1, 7);
-        public bool Kept { get; set; } = false;
+        public bool Kept { get; set; }
 
         /// <summary>
-        /// Roll this dice.
+        ///     Roll this dice.
         /// </summary>
         public void Roll()
         {
@@ -23,10 +21,10 @@ namespace Farkle
             Value = random.Next(1, 7);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public override string ToString()
         {
-            return (Kept) ? "Kept " + Value : "Rolled " + Value;
+            return Kept ? "Kept " + Value : "Rolled " + Value;
         }
     }
 }

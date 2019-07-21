@@ -1,28 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Text;
 
 namespace Farkle
 {
     /// <summary>
-    /// 
     /// </summary>
-    class GameExecutor
+    internal class GameExecutor
     {
-        private Game game;
+        private readonly Game game;
 
         public GameExecutor(string processName1, string processName2)
         {
-            Process player1Process = StartPlayerProcess(processName1);
-            Process player2Process = StartPlayerProcess(processName2);
+            var player1Process = StartPlayerProcess(processName1);
+            var player2Process = StartPlayerProcess(processName2);
             game = new Game(player1Process.StandardOutput, player1Process.StandardInput,
                 player2Process.StandardOutput, player2Process.StandardInput);
         }
 
         private Process StartPlayerProcess(string processName)
         {
-            Process p = new Process();
+            var p = new Process();
             p.StartInfo.FileName = processName;
             p.StartInfo.UseShellExecute = false;
             p.StartInfo.RedirectStandardOutput = true;
@@ -33,7 +31,7 @@ namespace Farkle
         }
 
         /// <summary>
-        /// Runs the game.
+        ///     Runs the game.
         /// </summary>
         public void RunGame()
         {
@@ -45,26 +43,32 @@ namespace Farkle
                 {
                     var rollResult = Logic.Reroll(game.CurrentPlayer);
                     InformDicesRolled(rollResult, game.CurrentPlayer.State);
-                    if (rollResult == GameActionResult.FAILURE) break;
-                    bool responseValid = false;
+                    if (rollResult == GameActionResult.Failure) break;
+                    var responseValid = false;
                     var response = new PlayerResponse();
                     while (!responseValid)
                     {
                         response = CheckResponse();
-                        if (response.Order == PlayerAction.SCORE)
+                        if (response.Order == PlayerAction.Score)
                         {
                             var scoreResult = Logic.ScoreCurrentTurn(game.CurrentPlayer);
-                            if (scoreResult == GameActionResult.SUCCESS) responseValid = true;
+                            if (scoreResult == GameActionResult.Success)
+                            {
+                                responseValid = true;
+                            }
                             else
                             {
                                 InformPlayer(game.CurrentPlayer, CommunicationConstants.FailureInfo);
                                 InformPlayer(game.CurrentPlayer, "-- Cant score current kept dices.");
                             }
                         }
-                        else if (response.Order == PlayerAction.KEEP)
+                        else if (response.Order == PlayerAction.Keep)
                         {
                             var keepResult = Logic.KeepDices(game.CurrentPlayer.State, response.Dices);
-                            if (keepResult == GameActionResult.SUCCESS) responseValid = true;
+                            if (keepResult == GameActionResult.Success)
+                            {
+                                responseValid = true;
+                            }
                             else
                             {
                                 InformPlayer(game.CurrentPlayer, CommunicationConstants.FailureInfo);
@@ -72,69 +76,68 @@ namespace Farkle
                             }
                         }
                     }
+
                     InformPlayer(game.CurrentPlayer, CommunicationConstants.SuccessInfo);
                     // player scored succesfully, end turn
-                    if (response.Order == PlayerAction.SCORE) break;                   
-                }                                
+                    if (response.Order == PlayerAction.Score) break;
+                }
+
                 InformEndTurn();
                 game.NextPlayer();
             }
+
             InformEndGame();
         }
 
         /// <summary>
-        /// Checks response from the player.
+        ///     Checks response from the player.
         /// </summary>
         /// <returns></returns>
         private PlayerResponse CheckResponse()
         {
-            PlayerResponse response = new PlayerResponse();
+            var response = new PlayerResponse();
             while (true)
             {
                 var line = ReadLineFromCurrentPlayer();
-                while (line == "")
-                {
-                    line = ReadLineFromCurrentPlayer();
-                }
+                while (line == "") line = ReadLineFromCurrentPlayer();
                 var orderTokens = line.Split(" ");
                 if (orderTokens[0] == CommunicationConstants.ScoreOrder)
                 {
-                    response.Order = PlayerAction.SCORE;
+                    response.Order = PlayerAction.Score;
                     return response;
                 }
-                else if (orderTokens[0] == CommunicationConstants.KeepOrder)
+
+                if (orderTokens[0] == CommunicationConstants.KeepOrder)
                 {
-                    response.Order = PlayerAction.KEEP;
+                    response.Order = PlayerAction.Keep;
                     var dices = new List<Dice>();
-                    for (int i = 1; i < orderTokens.Length; i++)
+                    for (var i = 1; i < orderTokens.Length; i++)
                     {
-                        int diceIndex = -1;
+                        var diceIndex = -1;
                         if (!int.TryParse(orderTokens[i], out diceIndex))
                         {
                             InformPlayer(game.CurrentPlayer, CommunicationConstants.BadOrderInfo);
-                            response.Order = PlayerAction.INVALID;
+                            response.Order = PlayerAction.Invalid;
                             return response;
                         }
-                        else
+
+                        if (diceIndex < 1 || diceIndex > 6)
                         {
-                            if (diceIndex < 1 || diceIndex > 6)
-                            {
-                                InformPlayer(game.CurrentPlayer, CommunicationConstants.BadOrderInfo);
-                                response.Order = PlayerAction.INVALID;
-                                return response;
-                            }
-                            dices.Add(game.CurrentPlayer.State.Dices[diceIndex - 1]);
+                            InformPlayer(game.CurrentPlayer, CommunicationConstants.BadOrderInfo);
+                            response.Order = PlayerAction.Invalid;
+                            return response;
                         }
+
+                        dices.Add(game.CurrentPlayer.State.Dices[diceIndex - 1]);
                     }
+
                     response.Dices = dices;
                     return response;
                 }
-                else
-                {
-                    InformPlayer(game.CurrentPlayer, CommunicationConstants.BadOrderInfo);
-                    response.Order = PlayerAction.INVALID;
-                    return response;
-                }
+
+                InformPlayer(game.CurrentPlayer, CommunicationConstants.BadOrderInfo);
+                response.Order = PlayerAction.Invalid;
+                return response;
             }
         }
 
@@ -145,10 +148,7 @@ namespace Farkle
 
         private void InformPlayers(string message)
         {
-            foreach (Player pl in game.Players)
-            {
-                pl.PlayerInput.WriteLine(message);
-            }
+            foreach (var pl in game.Players) pl.PlayerInput.WriteLine(message);
             Console.WriteLine(message);
         }
 
@@ -159,8 +159,8 @@ namespace Farkle
         }
 
         private void InformDicesRolled(GameActionResult rollResult, TurnState state)
-        { 
-            if (rollResult == GameActionResult.FAILURE)
+        {
+            if (rollResult == GameActionResult.Failure)
             {
                 InformPlayer(game.CurrentPlayer, "-- Bad luck! Nothing scorable was rolled!");
             }
@@ -169,24 +169,26 @@ namespace Farkle
                 InformPlayer(game.CurrentPlayer, "-- Roll succesful");
                 InformPlayer(game.CurrentPlayer, CommunicationConstants.CurrentTurnScoreInfo + " " + state.Score);
             }
-            foreach (Dice d in game.CurrentPlayer.State.Dices)
-            {                
+
+            foreach (var d in game.CurrentPlayer.State.Dices)
+            {
                 game.CurrentPlayer.PlayerInput.Write($"{d.Value} ");
                 Console.Write($"{d.Value} ");
             }
+
             InformPlayer(game.CurrentPlayer, "");
         }
 
         private void InformStartTurn()
         {
             InformPlayers("-- Turn starts.");
-            InformPlayers("-- Current player: " + game.CurrentPlayer.ToString());
+            InformPlayers("-- Current player: " + game.CurrentPlayer);
             InformPlayer(game.CurrentPlayer, CommunicationConstants.StartTurnInfo);
         }
 
         private void InformEndTurn()
         {
-            InformPlayers("-- Current player: " + game.CurrentPlayer.ToString());
+            InformPlayers("-- Current player: " + game.CurrentPlayer);
             InformPlayers("-- Turn ends.");
             InformPlayer(game.CurrentPlayer, CommunicationConstants.EndTurnInfo);
         }
@@ -200,13 +202,10 @@ namespace Farkle
         private void InformEndGame()
         {
             InformPlayers(CommunicationConstants.EndGameInfo);
-            foreach (Player pl in game.Players)
-            {
-                InformPlayers(pl.ToString());
-            }
-            InformPlayers($"-- " +
-                $"Winner is player number {game.Winner.TurnOrder}, " +
-                $"scoring {game.Winner.TotalScore} points!");
+            foreach (var pl in game.Players) InformPlayers(pl.ToString());
+            InformPlayers("-- " +
+                          $"Winner is player number {game.Winner.TurnOrder}, " +
+                          $"scoring {game.Winner.TotalScore} points!");
         }
     }
 }

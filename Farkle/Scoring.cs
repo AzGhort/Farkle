@@ -1,41 +1,35 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace Farkle
 {
     /// <summary>
-    /// Represents set of rolled dices.
+    ///     Represents set of rolled dices.
     /// </summary>
-    class DiceSet
+    internal class DiceSet
     {
-        public bool Keepable = true;
         public List<Dice> Dices;
-        public int Score = 0;
+        public bool Keepable = true;
+        public int Score;
     }
 
     /// <summary>
-    /// Provides methods to compute score of given dices.
+    ///     Provides methods to compute score of given dices.
     /// </summary>
-    class Scoring
+    internal class Scoring
     {
         /// <summary>
-        /// Determines score of given dices.
+        ///     Determines score of given dices.
         /// </summary>
         /// <param name="dices">Dices to be scored.</param>
         /// <returns>Dices and their score.</returns>
         public static DiceSet DetermineScore(List<Dice> dices)
         {
-            DiceSet retval = new DiceSet();
-            retval.Dices = dices;
+            var retval = new DiceSet {Dices = dices};
             var dicesCounts = SplitDicesByValue(dices);
             foreach (var diceValue in dicesCounts.Keys)
             {
-                int curVal = ComputeSameDicesScore(diceValue, dicesCounts[diceValue]);
-                if (curVal == 0)
-                {
-                    retval.Keepable = false;
-                }
+                var curVal = ComputeSameDicesScore(diceValue, dicesCounts[diceValue]);
+                if (curVal == 0) retval.Keepable = false;
 
                 retval.Score += curVal;
             }
@@ -44,24 +38,22 @@ namespace Farkle
         }
 
         /// <summary>
-        /// Splits dices by value to dictionary.
+        ///     Splits dices by value to dictionary.
         /// </summary>
         /// <param name="dices">Dices to be split.</param>
         /// <returns>Mapping from values to counts of the dices.</returns>
         private static Dictionary<int, int> SplitDicesByValue(IEnumerable<Dice> dices)
         {
             var ret = new Dictionary<int, int>();
-            foreach (Dice dice in dices)
-            {
+            foreach (var dice in dices)
                 if (ret.ContainsKey(dice.Value)) ret[dice.Value]++;
                 else ret[dice.Value] = 1;
-            }
 
             return ret;
         }
 
         /// <summary>
-        /// Computes score of dices with the same value.
+        ///     Computes score of dices with the same value.
         /// </summary>
         /// <param name="diceValue">Value of the dices.</param>
         /// <param name="diceCount">Count of the dices.</param>
@@ -69,7 +61,6 @@ namespace Farkle
         private static int ComputeSameDicesScore(int diceValue, int diceCount)
         {
             if (diceCount < 3)
-            {
                 switch (diceValue)
                 {
                     case 1:
@@ -79,9 +70,8 @@ namespace Farkle
                     default:
                         return 0;
                 }
-            }
 
-            int factor = diceCount - 2;
+            var factor = diceCount - 2;
             switch (diceValue)
             {
                 case 1:
@@ -99,7 +89,6 @@ namespace Farkle
                 default:
                     return 0;
             }
-
         }
-    }    
+    }
 }

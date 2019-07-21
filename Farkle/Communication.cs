@@ -1,34 +1,36 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace Farkle
 {
     /// <summary>
-    /// Represents types of player's actions.
+    ///     Represents types of player's actions.
     /// </summary>
-    enum PlayerAction
+    internal enum PlayerAction
     {
-        KEEP, SCORE, INVALID
+        Keep,
+        Score,
+        Invalid
     }
 
     /// <summary>
-    /// Represents full action of the player.
+    ///     Represents full action of the player.
     /// </summary>
-    class PlayerResponse
+    internal class PlayerResponse
     {
-        public PlayerAction Order;
         public List<Dice> Dices;
+        public PlayerAction Order;
     }
 
     /// <summary>
-    /// Class containing constants used in communication with players.
+    ///     Class containing constants used in communication with players.
     /// </summary>
-    class CommunicationConstants
+    internal class CommunicationConstants
     {
         // messages from players
         public const string KeepOrder = "KEEP";
+
         public const string ScoreOrder = "SCORE";
+
         // messages from the game
         public const string EndGameInfo = "GAME OVER";
         public const string StartGameInfo = "START";
