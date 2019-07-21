@@ -5,7 +5,7 @@ namespace Farkle
     /// <summary>
     ///     State of the current turn.
     /// </summary>
-    internal class TurnState
+    public class TurnState
     {
         public int Attempt = 0;
         public List<Dice> Dices = new List<Dice>();

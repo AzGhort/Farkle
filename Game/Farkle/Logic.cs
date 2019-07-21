@@ -26,7 +26,6 @@ namespace Farkle
             var diceSet = Scoring.DetermineScore(dicesRolled);
             if (diceSet.Score == 0 || diceSet.Score + player.State.Score < 350 && player.State.Attempt == 3)
             {
-                player.State = new TurnState();
                 return GameActionResult.Failure;
             }
 
@@ -62,9 +61,17 @@ namespace Farkle
         /// <returns>Whether the scoring succeeded.</returns>
         public static GameActionResult ScoreCurrentTurn(Player player)
         {
-            if (!player.State.Scorable) return GameActionResult.Failure;
+            if (!player.State.Scorable)
+            {
+                // try to score the last rolled dices
+                var dices = player.State.Dices.FindAll(dice => !dice.Kept);
+                var diceSet = Scoring.DetermineScore(dices);
+                if (!diceSet.Scorable) return GameActionResult.Failure;
+                player.TotalScore += diceSet.Score;
+                return GameActionResult.Success;
+            }
+
             player.TotalScore += player.State.Score;
-            player.State = new TurnState();
             return GameActionResult.Success;
         }
     }

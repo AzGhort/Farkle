@@ -1,19 +1,18 @@
-﻿using System;
-using System.Diagnostics;
-
-namespace Farkle
+﻿namespace Farkle
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             if (args.Length != 2)
             {
-                Console.WriteLine("Expecting name of both players executables in args.");
+                var runner = new GameRunner();
+                runner.RunGameLocally();
                 return;
             }
-            GameExecutor gameExecutor = new GameExecutor(args[0], args[1]);
-            gameExecutor.RunGame();
+
+            var gameExecutor = new GameExecutor();
+            gameExecutor.RunGame(args[0], args[1]);
         }
     }
 }

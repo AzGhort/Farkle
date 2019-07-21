@@ -77,6 +77,7 @@ namespace Farkle
         /// </summary>
         public void NextPlayer()
         {
+            CurrentPlayer.State = new TurnState();
             TurnOrder = (TurnOrder + 1) % Players.Length;
         }
     }

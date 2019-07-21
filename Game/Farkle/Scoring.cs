@@ -5,17 +5,18 @@ namespace Farkle
     /// <summary>
     ///     Represents set of rolled dices.
     /// </summary>
-    internal class DiceSet
+    public class DiceSet
     {
         public List<Dice> Dices;
         public bool Keepable = true;
+        public bool Scorable => Score >= 350;
         public int Score;
     }
 
     /// <summary>
     ///     Provides methods to compute score of given dices.
     /// </summary>
-    internal class Scoring
+    public class Scoring
     {
         /// <summary>
         ///     Determines score of given dices.
@@ -42,7 +43,7 @@ namespace Farkle
         /// </summary>
         /// <param name="dices">Dices to be split.</param>
         /// <returns>Mapping from values to counts of the dices.</returns>
-        private static Dictionary<int, int> SplitDicesByValue(IEnumerable<Dice> dices)
+        public static Dictionary<int, int> SplitDicesByValue(IEnumerable<Dice> dices)
         {
             var ret = new Dictionary<int, int>();
             foreach (var dice in dices)
@@ -58,7 +59,7 @@ namespace Farkle
         /// <param name="diceValue">Value of the dices.</param>
         /// <param name="diceCount">Count of the dices.</param>
         /// <returns>Score of given dice set.</returns>
-        private static int ComputeSameDicesScore(int diceValue, int diceCount)
+        public static int ComputeSameDicesScore(int diceValue, int diceCount)
         {
             if (diceCount < 3)
                 switch (diceValue)

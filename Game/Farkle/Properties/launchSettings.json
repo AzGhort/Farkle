@@ -1,8 +1,7 @@
 {
   "profiles": {
     "Farkle": {
-      "commandName": "Project",
-      "commandLineArgs": "cmd.exe cmd.exe"
+      "commandName": "Project"
     }
   }
 }

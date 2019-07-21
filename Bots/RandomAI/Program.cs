@@ -1,12 +1,13 @@
-﻿using System;
+﻿using GreedyCowardBot;
 
 namespace RandomAI
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            var brain = new Brain();
+            brain.Start();
         }
     }
 }
