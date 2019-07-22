@@ -26,7 +26,7 @@ namespace GreedyCowardAI
 
         public Message(string messageLiteral)
         {
-            if (messageLiteral == "")
+            if (string.IsNullOrEmpty(messageLiteral))
             {
                 Type = MessageType.Comment;
             }
@@ -66,7 +66,9 @@ namespace GreedyCowardAI
                         break;
                     case CommunicationConstants.DicesInfo:
                         Type = MessageType.DicesRolled;
-                        for (var i = 1; i < tokens.Length; i++) MessageParams.Add(int.Parse(tokens[i]));
+                        for (var i = 1; i < tokens.Length; i++)
+                            if (int.TryParse(tokens[i], out var value))
+                                MessageParams.Add(value);
                         break;
                     default:
                         Type = MessageType.Comment;
@@ -80,12 +82,13 @@ namespace GreedyCowardAI
             switch (action)
             {
                 case PlayerAction.Keep:
-                    Console.WriteLine(CommunicationConstants.KeepOrder);
+                    Console.Write(CommunicationConstants.KeepOrder);
                     foreach (var t in messageParams)
                     {
                         Console.Write(" ");
                         Console.Write(t);
                     }
+
                     Console.WriteLine();
                     break;
                 case PlayerAction.Score:

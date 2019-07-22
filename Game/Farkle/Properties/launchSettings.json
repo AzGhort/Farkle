@@ -1,7 +1,8 @@
 {
   "profiles": {
     "Farkle": {
-      "commandName": "Project"
+      "commandName": "Project",
+      "commandLineArgs": "GreedyCowardBot.dll GreedyCowardBot.dll"
     }
   }
 }

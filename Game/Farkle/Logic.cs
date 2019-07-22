@@ -66,8 +66,8 @@ namespace Farkle
                 // try to score the last rolled dices
                 var dices = player.State.Dices.FindAll(dice => !dice.Kept);
                 var diceSet = Scoring.DetermineScore(dices);
-                if (!diceSet.Scorable) return GameActionResult.Failure;
-                player.TotalScore += diceSet.Score;
+                if (diceSet.Score + player.State.Score < 350) return GameActionResult.Failure;
+                player.TotalScore += diceSet.Score + player.State.Score;
                 return GameActionResult.Success;
             }
 

@@ -8,8 +8,9 @@ namespace GreedyCowardBot
     internal class Brain
     {
         private PlayerAction currentAction;
-        private TurnState currentTurnState;
-        private List<Dice> lastRolledDices;
+        private TurnState currentTurnState = new TurnState();
+        private Message lastDicesMessage;
+        private List<Dice> lastKeptDices;
         private int totalScore;
 
         public void Start()
@@ -26,14 +27,19 @@ namespace GreedyCowardBot
                     case MessageType.StartTurn:
                         currentTurnState = new TurnState();
                         currentAction = PlayerAction.Invalid;
-                        lastRolledDices = new List<Dice>();
+                        lastKeptDices = new List<Dice>();
                         break;
                     case MessageType.SuccessfulAction:
                         AccountLastAction();
                         break;
+                    case MessageType.FailedAction:
+                        //var dices = ConsiderDices(lastDicesMessage.MessageParams);
+                        //Message.SendActionOrder(currentAction, dices);
+                        break;
                     case MessageType.DicesRolled:
-                        var dices = ConsiderDices(message.MessageParams);
-                        Message.SendActionOrder(currentAction, dices);
+                        lastDicesMessage = message;
+                        var dicez = ConsiderDices(message.MessageParams);
+                        Message.SendActionOrder(currentAction, dicez);
                         break;
                 }
             }
@@ -41,15 +47,18 @@ namespace GreedyCowardBot
 
         private void AccountLastAction()
         {
+            var diceSet = Scoring.DetermineScore(lastKeptDices);
             switch (currentAction)
             {
                 case PlayerAction.Score:
+                    diceSet = Scoring.DetermineScore(lastKeptDices);
+                    currentTurnState.Score += diceSet.Score;
                     totalScore += currentTurnState.Score;
                     break;
                 case PlayerAction.Keep:
-                    var diceSet = Scoring.DetermineScore(lastRolledDices);
+                    diceSet = Scoring.DetermineScore(lastKeptDices);
                     currentTurnState.Score += diceSet.Score;
-                    foreach (var dice in lastRolledDices) dice.Kept = true;
+                    foreach (var dice in lastKeptDices) dice.Kept = true;
                     if (currentTurnState.Dices.TrueForAll(dice => dice.Kept)) currentTurnState.ResetDices();
                     break;
             }
@@ -58,18 +67,17 @@ namespace GreedyCowardBot
         private List<int> ConsiderDices(List<int> dices)
         {
             var diceIndices = new List<int>();
-            var lastDices = new List<Dice>();
+            var lastRolledDices = new List<Dice>();
             currentTurnState.Attempt++;
             for (var i = 0; i < dices.Count; i++)
             {
                 currentTurnState.Dices[i].Value = dices[i];
                 // this dice is not kept yet
-                if (!currentTurnState.Dices[i].Kept) lastDices.Add(currentTurnState.Dices[i]);
+                if (!currentTurnState.Dices[i].Kept) lastRolledDices.Add(currentTurnState.Dices[i]);
             }
 
-            lastRolledDices = lastDices;
             var currentTotalScore = currentTurnState.Score;
-            var split = Scoring.SplitDicesByValue(lastDices);
+            var split = Scoring.SplitDicesByValue(lastRolledDices);
             foreach (var diceValue in split.Keys)
             {
                 // keep all ones and fives
@@ -86,7 +94,13 @@ namespace GreedyCowardBot
                 currentTotalScore += Scoring.ComputeSameDicesScore(diceValue, split[diceValue]);
             }
 
-            currentAction = currentTotalScore < 350 ? PlayerAction.Keep : PlayerAction.Score;
+            lastKeptDices = new List<Dice>();
+            foreach (var diceIndex in diceIndices) lastKeptDices.Add(currentTurnState.Dices[diceIndex - 1]);
+            currentAction =
+                currentTotalScore < 350 ||
+                lastKeptDices.Count + currentTurnState.Dices.FindAll(dice => dice.Kept).Count == 6
+                    ? PlayerAction.Keep
+                    : PlayerAction.Score;
 
             return diceIndices;
         }

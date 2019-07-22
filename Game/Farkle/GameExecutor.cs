@@ -7,7 +7,8 @@ namespace Farkle
     internal class GameExecutor
     {
         private readonly GameRunner runner = new GameRunner();
-        
+        private const string dotnet = "dotnet.exe";
+
         public void RunGame(string processName1, string processName2)
         {
             var player1Process = StartPlayerProcess(processName1);
@@ -21,7 +22,8 @@ namespace Farkle
             {
                 StartInfo =
                 {
-                    FileName = processName,
+                    FileName = dotnet,
+                    Arguments = processName,
                     UseShellExecute = false,
                     RedirectStandardOutput = true,
                     RedirectStandardInput = true,

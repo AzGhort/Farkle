@@ -96,7 +96,7 @@ namespace Farkle
             while (true)
             {
                 var line = ReadLineFromCurrentPlayer();
-                while (line == "") line = ReadLineFromCurrentPlayer();
+                while (string.IsNullOrEmpty(line)) line = ReadLineFromCurrentPlayer();
                 var orderTokens = line.Split(" ");
                 if (orderTokens[0] == CommunicationConstants.ScoreOrder)
                 {
@@ -166,14 +166,12 @@ namespace Farkle
                 InformPlayer(game.CurrentPlayer, "-- Roll succesful");
                 InformPlayer(game.CurrentPlayer, CommunicationConstants.CurrentTurnScoreInfo + " " + state.Score);
             }
-            InformPlayer(game.CurrentPlayer, CommunicationConstants.DicesInfo);
+            string dices = "";
             foreach (var d in game.CurrentPlayer.State.Dices)
             {
-                game.CurrentPlayer.PlayerInput.Write($"{d.Value} ");
-                Console.Write($"{d.Value} ");
+                dices += $"{d.Value} ";
             }
-
-            InformPlayer(game.CurrentPlayer, "");
+            InformPlayer(game.CurrentPlayer, CommunicationConstants.DicesInfo + " " + dices);
         }
 
         private void InformStartTurn()
