@@ -9,6 +9,11 @@ namespace Farkle
     {
         private Game game;
 
+        /// <summary>
+        ///     Runs the game with players as external processes.
+        /// </summary>
+        /// <param name="player1Process">Process of the first player.</param>
+        /// <param name="player2Process">Process of the second player.</param>
         public void RunGameExternally(Process player1Process, Process player2Process)
         {
             game = new Game(player1Process.StandardOutput, player1Process.StandardInput,
@@ -16,6 +21,9 @@ namespace Farkle
             Run();
         }
 
+        /// <summary>
+        ///     Runs the game locally, communicating through console.
+        /// </summary>
         public void RunGameLocally()
         {
             var sw = new StreamWriter(Console.OpenStandardOutput())
@@ -89,7 +97,7 @@ namespace Farkle
         /// <summary>
         ///     Checks response from the player.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Response of the player.</returns>
         private PlayerResponse CheckResponse()
         {
             var response = new PlayerResponse();
@@ -138,23 +146,43 @@ namespace Farkle
             }
         }
 
+        /// <summary>
+        ///     Reads next line from the current player.
+        /// </summary>
+        /// <returns>Next message from the current player.</returns>
         private string ReadLineFromCurrentPlayer()
         {
             return game.CurrentPlayer.PlayerOutput.ReadLine();
         }
 
+        #region Communicating with bots
+
+        /// <summary>
+        ///     Sends a message to both players, also logs it to the standard output.
+        /// </summary>
+        /// <param name="message">Message to send.</param>
         private void InformPlayers(string message)
         {
             foreach (var pl in game.Players) pl.PlayerInput.WriteLine(message);
             Console.WriteLine(message);
         }
 
+        /// <summary>
+        ///     Sends a message to given player, also logs it to the standard output.
+        /// </summary>
+        /// <param name="pl">Player to send the message to.</param>
+        /// <param name="message">Message to send.</param>
         private void InformPlayer(Player pl, string message)
         {
             pl.PlayerInput.WriteLine(message);
             Console.WriteLine(message);
         }
 
+        /// <summary>
+        ///     Informs players about the last roll of the dices.
+        /// </summary>
+        /// <param name="rollResult">Whether the roll succeeded.</param>
+        /// <param name="state">Current state of the turn.</param>
         private void InformDicesRolled(GameActionResult rollResult, TurnState state)
         {
             var dices = "";
@@ -174,6 +202,9 @@ namespace Farkle
             InformPlayer(game.CurrentPlayer, CommunicationConstants.DicesInfo + " " + dices);
         }
 
+        /// <summary>
+        ///     Informs about the start of the turn.
+        /// </summary>
         private void InformStartTurn()
         {
             InformPlayers("-- Turn starts.");
@@ -181,6 +212,9 @@ namespace Farkle
             InformPlayer(game.CurrentPlayer, CommunicationConstants.StartTurnInfo);
         }
 
+        /// <summary>
+        ///     Informs about the end of the turn.
+        /// </summary>
         private void InformEndTurn()
         {
             InformPlayers("-- Turn ends.");
@@ -189,12 +223,18 @@ namespace Farkle
                 CommunicationConstants.OtherPlayerTurnInfo + " " + game.CurrentPlayer.TotalScore);
         }
 
+        /// <summary>
+        ///     Informs about start of the game.
+        /// </summary>
         private void InformStartGame()
         {
             InformPlayers(CommunicationConstants.StartGameInfo);
             InformPlayers("-- Game starts!");
         }
 
+        /// <summary>
+        ///     Informs about end of the game.
+        /// </summary>
         private void InformEndGame()
         {
             InformPlayers(CommunicationConstants.EndGameInfo);
@@ -203,5 +243,7 @@ namespace Farkle
                           $"Winner is player number {game.Winner.TurnOrder}, " +
                           $"scoring {game.Winner.TotalScore} points!");
         }
+
+        #endregion
     }
 }

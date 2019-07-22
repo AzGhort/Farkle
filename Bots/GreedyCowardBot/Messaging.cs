@@ -4,6 +4,9 @@ using Farkle;
 
 namespace GreedyCowardAI
 {
+    /// <summary>
+    ///     Represents types of messages sent from the game.
+    /// </summary>
     internal enum MessageType
     {
         Comment,
@@ -18,12 +21,19 @@ namespace GreedyCowardAI
         DicesRolled
     }
 
+    /// <summary>
+    ///     Represents parsed message sent from the game.
+    /// </summary>
     internal class Message
     {
         // can be either score or dice indices
         public List<int> MessageParams = new List<int>();
         public MessageType Type;
 
+        /// <summary>
+        ///     Creates a new message instance from the string received.
+        /// </summary>
+        /// <param name="messageLiteral">Original message received from the game</param>
         public Message(string messageLiteral)
         {
             if (string.IsNullOrEmpty(messageLiteral))
@@ -77,6 +87,11 @@ namespace GreedyCowardAI
             }
         }
 
+        /// <summary>
+        ///     Sends a new action description to the game.
+        /// </summary>
+        /// <param name="action">Game action to execute.</param>
+        /// <param name="messageParams">Other values to along with the action.</param>
         public static void SendActionOrder(PlayerAction action, List<int> messageParams)
         {
             switch (action)

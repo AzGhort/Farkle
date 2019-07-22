@@ -5,7 +5,7 @@ namespace Farkle
     /// <summary>
     ///     Dice representation.
     /// </summary>
-   public class Dice
+    public class Dice
     {
         private static readonly Random random = new Random();
 
