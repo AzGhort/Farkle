@@ -21,6 +21,7 @@ namespace Farkle
         }
 
         public bool Scorable => Score >= 350;
+        public bool RerolledAll;
 
         /// <summary>
         ///     Reset the dices of the state, but keep the score.
@@ -28,6 +29,7 @@ namespace Farkle
         public void ResetDices()
         {
             Dices = new List<Dice>();
+            RerolledAll = true;
             for (var i = 0; i < 6; i++) Dices.Add(new Dice());
         }
     }

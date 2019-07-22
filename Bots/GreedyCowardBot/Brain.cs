@@ -5,6 +5,9 @@ using GreedyCowardAI;
 
 namespace GreedyCowardBot
 {
+    /// <summary>
+    ///     Represents bot's logic.
+    /// </summary>
     internal class Brain
     {
         private PlayerAction currentAction;
@@ -13,6 +16,9 @@ namespace GreedyCowardBot
         private List<Dice> lastKeptDices;
         private int totalScore;
 
+        /// <summary>
+        ///     Runs the main bot's AI loop.
+        /// </summary>
         public void Start()
         {
             while (true)
@@ -28,13 +34,14 @@ namespace GreedyCowardBot
                         currentTurnState = new TurnState();
                         currentAction = PlayerAction.Invalid;
                         lastKeptDices = new List<Dice>();
+                        lastDicesMessage = null;
                         break;
                     case MessageType.SuccessfulAction:
                         AccountLastAction();
                         break;
                     case MessageType.FailedAction:
-                        //var dices = ConsiderDices(lastDicesMessage.MessageParams);
-                        //Message.SendActionOrder(currentAction, dices);
+                        var dices = ConsiderDices(lastDicesMessage.MessageParams);
+                        Message.SendActionOrder(currentAction, dices);
                         break;
                     case MessageType.DicesRolled:
                         lastDicesMessage = message;
@@ -45,6 +52,9 @@ namespace GreedyCowardBot
             }
         }
 
+        /// <summary>
+        ///     After receiving confirmation from the game, account the last action.
+        /// </summary>
         private void AccountLastAction()
         {
             var diceSet = Scoring.DetermineScore(lastKeptDices);
@@ -64,6 +74,11 @@ namespace GreedyCowardBot
             }
         }
 
+        /// <summary>
+        ///     Consider new dices rolled.
+        /// </summary>
+        /// <param name="dices">List of dices values.</param>
+        /// <returns>Indices of dices to keep, empty if intending to score.</returns>
         private List<int> ConsiderDices(List<int> dices)
         {
             var diceIndices = new List<int>();
@@ -105,6 +120,11 @@ namespace GreedyCowardBot
             return diceIndices;
         }
 
+        /// <summary>
+        ///     Finds all dices with given value, and returns their indices.
+        /// </summary>
+        /// <param name="diceValue">Which dices to look for.</param>
+        /// <returns>List of dice indices (+1)</returns>
         private List<int> FindDiceByValueSendableIndices(int diceValue)
         {
             var ret = new List<int>();

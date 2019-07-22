@@ -157,20 +157,20 @@ namespace Farkle
 
         private void InformDicesRolled(GameActionResult rollResult, TurnState state)
         {
+            var dices = "";
             if (rollResult == GameActionResult.Failure)
             {
                 InformPlayer(game.CurrentPlayer, "-- Bad luck! Nothing scorable was rolled!");
+                foreach (var d in game.CurrentPlayer.State.Dices) dices += $"{d.Value} ";
+                InformPlayer(game.CurrentPlayer,
+                    CommunicationConstants.CommentStart + " " + CommunicationConstants.DicesInfo + " " + dices);
+                return;
             }
-            else
-            {
-                InformPlayer(game.CurrentPlayer, "-- Roll succesful");
-                InformPlayer(game.CurrentPlayer, CommunicationConstants.CurrentTurnScoreInfo + " " + state.Score);
-            }
-            string dices = "";
-            foreach (var d in game.CurrentPlayer.State.Dices)
-            {
-                dices += $"{d.Value} ";
-            }
+
+            dices = "";
+            InformPlayer(game.CurrentPlayer, "-- Roll succesful");
+            InformPlayer(game.CurrentPlayer, CommunicationConstants.CurrentTurnScoreInfo + " " + state.Score);
+            foreach (var d in game.CurrentPlayer.State.Dices) dices += $"{d.Value} ";
             InformPlayer(game.CurrentPlayer, CommunicationConstants.DicesInfo + " " + dices);
         }
 
@@ -183,10 +183,10 @@ namespace Farkle
 
         private void InformEndTurn()
         {
-            InformPlayers("-- Current player: " + game.CurrentPlayer);
             InformPlayers("-- Turn ends.");
             InformPlayer(game.CurrentPlayer, CommunicationConstants.EndTurnInfo);
-            InformPlayer(game.OtherPlayer, CommunicationConstants.OtherPlayerTurnInfo + " " + game.CurrentPlayer.TotalScore);
+            InformPlayer(game.OtherPlayer,
+                CommunicationConstants.OtherPlayerTurnInfo + " " + game.CurrentPlayer.TotalScore);
         }
 
         private void InformStartGame()

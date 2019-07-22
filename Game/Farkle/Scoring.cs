@@ -9,8 +9,8 @@ namespace Farkle
     {
         public List<Dice> Dices;
         public bool Keepable = true;
-        public bool Scorable => Score >= 350;
         public int Score;
+        public bool Scorable => Score >= 350;
     }
 
     /// <summary>
