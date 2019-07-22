@@ -30,45 +30,45 @@ The game is implemented in Farkle/Game folder, and be either played with externa
 * *KEEP {A} {B} {C}...* - keep dices with ONE-BASED indices A, B, C.   
 
 ### Example communication
-> **GAME to all** *START*
+> **GAME to all**         *START*
 >
-> **GAME to all** *-- Game starts!*
+> **GAME to all**         *-- Game starts!*
 >
-> **GAME to all** *-- Turn starts.*
+> **GAME to all**         *-- Turn starts.*
 >
-> **GAME to all** *-- Current player: Player number 0, score 0.*
+> **GAME to all**         *-- Current player: Player number 0, score 0.*
 >
-> **GAME to player 1** *PLAY*
+> **GAME to player 1**    *PLAY*
 >
-> **GAME to player 1** *-- Roll successful.*
+> **GAME to player 1**    *-- Roll successful.*
 >
-> **GAME to player 1** *CURRENT-SCORE 0*
+> **GAME to player 1**    *CURRENT-SCORE 0*
 >
-> **GAME to player 1** *DICES 4 1 4 3 4 6*
+> **GAME to player 1**    *DICES 4 1 4 3 4 6*
 >
-> **Player 1 to GAME** *KEEP 1 3 5 2*
+> **Player 1 to GAME**    *KEEP 1 3 5 2*
 >
-> **GAME to player 1** *SUCCESS*
+> **GAME to player 1**    *SUCCESS*
 >
-> **GAME to player 1** *-- Roll successful.*
+> **GAME to player 1**    *-- Roll successful.*
 >
-> **GAME to player 1** *CURRENT-SCORE 500*
+> **GAME to player 1**    *CURRENT-SCORE 500*
 >
-> **GAME to player 1** *DICES 4 1 4 2 4 5*
+> **GAME to player 1**    *DICES 4 1 4 2 4 5*
 >
-> **Player 1 to GAME** *SCORE*
+> **Player 1 to GAME**    *SCORE*
 >
-> **GAME to player 1** *SUCCESS*
+> **GAME to player 1**    *SUCCESS*
 >
-> **GAME to player 1** *-- Turn ends.*
+> **GAME to player 1**    *-- Turn ends.*
 >
-> **GAME to player 1** *TURN-OVER*
+> **GAME to player 1**    *TURN-OVER*
 >
-> **GAME to player 2** *OPPONENT-SCORE 550*
+> **GAME to player 2**    *OPPONENT-SCORE 550*
 >
-> **GAME to all** *-- Turn starts.*
+> **GAME to all**         *-- Turn starts.*
 >
-> **GAME to all** *-- Current player: Player number 1, score 0.*
+> **GAME to all**         *-- Current player: Player number 1, score 0.*
 >
 > *...*
 
