@@ -30,25 +30,45 @@ The game is implemented in Farkle/Game folder, and be either played with externa
 * *KEEP {A} {B} {C}...* - keep dices with ONE-BASED indices A, B, C.   
 
 ### Example communication
-* *START*
-* *-- Game starts!*
-* *-- Turn starts.*
-* *-- Current player: Player number 0, score 0.*
-* *PLAY*
-* *-- Roll successful.
-* *CURRENT-SCORE 0*
-* *DICES 4 1 4 3 4 6*
-* **KEEP 1 3 5 2**
-* *SUCCESS*
-* *-- Roll successful.
-* *CURRENT-SCORE 500*
-* *DICES 4 1 4 2 4 5*
-* **SCORE**
-* *SUCCESS*
-* *-- Turn ends.*
-* *TURN-OVER*
-* *OPPONENT-SCORE 550*
-* *-- Turn starts.*
-* *-- Current player: Player number 1, score 0.*
-* *...*
+> *START*
+>
+> *-- Game starts!*
+>
+> *-- Turn starts.*
+>
+> *-- Current player: Player number 0, score 0.*
+>
+> *PLAY*
+>
+> *-- Roll successful.*
+>
+> *CURRENT-SCORE 0*
+>
+> *DICES 4 1 4 3 4 6*
+>
+> **KEEP 1 3 5 2**
+>
+> *SUCCESS*
+>
+> *-- Roll successful.
+>
+> *CURRENT-SCORE 500*
+>
+> *DICES 4 1 4 2 4 5*
+>
+> **SCORE**
+>
+> *SUCCESS*
+>
+> *-- Turn ends.*
+>
+> *TURN-OVER*
+>
+> *OPPONENT-SCORE 550*
+>
+> *-- Turn starts.*
+>
+> *-- Current player: Player number 1, score 0.*
+>
+> *...*
 
